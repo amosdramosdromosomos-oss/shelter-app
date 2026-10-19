@@ -1,0 +1,7 @@
+﻿shelter.db
+*.png
+*.jpg
+*.jpeg
+*.lnk
+clean_shelter_app/
+import os.txt
