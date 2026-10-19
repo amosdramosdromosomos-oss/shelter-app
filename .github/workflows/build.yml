@@ -1,0 +1,44 @@
+name: Build Executables
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+            ext: .exe
+          - os: ubuntu-latest
+            name: linux
+            ext: ''
+          - os: macos-latest
+            name: macos
+            ext: ''
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller pillow
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --noconsole --onefile shelter_app.py
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: shelter-app-${{ matrix.name }}
+        path: dist/shelter_app${{ matrix.ext }}
